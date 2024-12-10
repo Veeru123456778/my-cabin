@@ -12,25 +12,127 @@ import { createBook } from '/src/Components/books.js';
 import { createWaterBottle } from '/src/Components/bottle.js'; 
 import { createPhotoFrame } from '/src/Components/photoFrame.js'; 
 
-const scene = new THREE.Scene()
+// const scene = new THREE.Scene()
+// const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 5000);
+// const renderer = new THREE.WebGLRenderer({antialias:true,  precision: "highp",
+// });
+
+// renderer.setSize(window.innerWidth, window.innerHeight);
+
+
+// renderer.setPixelRatio(window.devicePixelRatio);
+// renderer.setSize(window.innerWidth, window.innerHeight);
+// renderer.outputEncoding = THREE.sRGBEncoding; 
+// renderer.shadowMap.enabled = true; 
+// renderer.shadowMap.type = THREE.PCFSoftShadowMap; 
+
+// document.body.appendChild(renderer.domElement);
+
+// const roomWidth = 18;
+// const roomHeight = 10;
+// const roomDepth = 18;
+
+
+
+// // Define the room boundaries
+// const roomBoundary = {
+//   minX: -roomWidth / 2,  // left wall
+//   maxX: roomWidth / 2,   // right wall
+//   minY: 0,               // floor (optional, if you don't want the camera below the floor)
+//   maxY: roomHeight,      // ceiling
+//   minZ: -roomDepth / 2,  // back wall
+//   maxZ: roomDepth / 2    // front wall
+// };
+
+// // Function to constrain camera movement
+// function constrainMovement(camera) {
+//   camera.position.x = Math.max(roomBoundary.minX, Math.min(roomBoundary.maxX, camera.position.x));
+//   camera.position.y = Math.max(roomBoundary.minY, Math.min(roomBoundary.maxY, camera.position.y));
+//   camera.position.z = Math.max(roomBoundary.minZ, Math.min(roomBoundary.maxZ, camera.position.z));
+// }
+
+// // Example animation loop
+// function animate() {
+//   requestAnimationFrame(animate);
+
+//   // Constrain camera movement
+//   constrainMovement(camera);
+
+//   renderer.render(scene, camera);
+// }
+
+// // Start the animation loop
+// animate();
+
+
+const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 5000);
-const renderer = new THREE.WebGLRenderer({antialias:true,  precision: "highp",
-});
+const renderer = new THREE.WebGLRenderer({ antialias: true, precision: "highp" });
 
 renderer.setSize(window.innerWidth, window.innerHeight);
-
-
 renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.outputEncoding = THREE.sRGBEncoding; 
-renderer.shadowMap.enabled = true; 
-renderer.shadowMap.type = THREE.PCFSoftShadowMap; 
+renderer.outputEncoding = THREE.sRGBEncoding;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 document.body.appendChild(renderer.domElement);
 
 const roomWidth = 18;
 const roomHeight = 10;
 const roomDepth = 18;
+
+// Define the room boundaries
+const roomBoundary = {
+  minX: -roomWidth / 2,  // left wall
+  maxX: roomWidth / 2,   // right wall
+  minY: 0,               // floor (optional, if you don't want the camera below the floor)
+  maxY: roomHeight,      // ceiling
+  minZ: -roomDepth / 2,  // back wall
+  maxZ: roomDepth / 2    // front wall
+};
+
+let cameraSpeed = 0.1; // Set speed of camera movement
+
+// Function to constrain camera movement
+function constrainMovement(camera) {
+  camera.position.x = Math.max(roomBoundary.minX, Math.min(roomBoundary.maxX, camera.position.x));
+  camera.position.y = Math.max(roomBoundary.minY, Math.min(roomBoundary.maxY, camera.position.y));
+  camera.position.z = Math.max(roomBoundary.minZ, Math.min(roomBoundary.maxZ, camera.position.z));
+}
+
+// Add event listener for keydown to move camera
+document.addEventListener('keydown', onKeyDown);
+
+function onKeyDown(event) {
+  switch (event.key) {
+    case 'ArrowUp': // Move forward (along Z-axis)
+      camera.position.z -= cameraSpeed;
+      break;
+    case 'ArrowDown': // Move backward (along Z-axis)
+      camera.position.z += cameraSpeed;
+      break;
+    case 'ArrowLeft': // Move left (along X-axis)
+      camera.position.x -= cameraSpeed;
+      break;
+    case 'ArrowRight': // Move right (along X-axis)
+      camera.position.x += cameraSpeed;
+      break;
+  }
+}
+
+// Example animation loop
+function animate() {
+  requestAnimationFrame(animate);
+
+  // Constrain camera movement
+  constrainMovement(camera);
+
+  renderer.render(scene, camera);
+}
+
+// Start the animation loop
+animate();
+
 
 function createWalls() {
   const wallsGroup = new THREE.Group();
@@ -252,7 +354,7 @@ for(let i=0;i<4;i++){
   const chairGroup = createChairs(false);
 chairGroup.position.set(5,-5.8,1.7);
 chairGroup.scale.set(2.2, 2.2, 2.2);
-chairGroup.rotateY(-11+90);
+chairGroup.rotateY(-11+90+5.8);
 scene.add(chairGroup);
 }
 
